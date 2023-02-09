@@ -1,0 +1,23 @@
+
+.body-color {
+
+    background-color: purple;
+}
+
+
+.btn.btn-outline-primary {
+    width: 200px; /* or any desired width in pixels */
+    padding: 10px;
+    margin-bottom: 100px; /* optional, for maintaining button height */
+ }
+
+
+ .MoneyAnimation{
+
+
+    height: 40%;
+    width: 40%;
+ }
+
+
+

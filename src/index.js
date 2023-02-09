@@ -2,18 +2,23 @@ import React from'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import {WelcomePage} from './Component/Page.js';
-import {WelcomePageImage} from './Component/Page.js';
+import {  WelcomePage, WelcomePageImage,MoneyAnimation,LoginUI, SIgnUpUI } from './Components/Welcome.js';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Signup from './Components/Signup';
+import "bootstrap/dist/css/bootstrap.min.css"
+import {Container } from 'react-bootstrap'
+
+
+
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <WelcomePage>
-    
-      </WelcomePage>
 
-      <WelcomePageImage/> 
+    <App/>
   </React.StrictMode>
 );
 
