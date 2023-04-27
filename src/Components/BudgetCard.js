@@ -1,7 +1,7 @@
 import { Button, Card, ProgressBar, Stack } from "react-bootstrap"
 import React, { useState } from 'react';
 import { currencyFormat } from "../Utils"
-import{ViewExpensesModal} from './ViewExpensesModal';
+import { ViewExpensesModal } from './ViewExpensesModal';
 import { toast } from 'react-toastify';
 
 
@@ -17,17 +17,14 @@ export function BudgetCard({
   listOfExpense,
 }) {
 
-  const [ ShowExpenseView,setExpenseView] = useState(false); // ExpenseView Controller 
+  const [ShowExpenseView, setExpenseView] = useState(false); // ExpenseView Controller 
 
 
-  const  handleExpenseView =() =>{
-   
-    setExpenseView(true); //(true);
-  };
 
 
-  const  setShowExpenseView =() =>{
-   
+
+  const setShowExpenseView = () => {
+
     setExpenseView(true); //(true);
   };
 
@@ -45,56 +42,56 @@ export function BudgetCard({
   return (
 
     <>
-    <Card className={classNames.join(" ")}>
-      <Card.Body>
-        <Card.Title className="d-flex justify-content-between align-items-baseline fw-normal mb-3">
-          <div className="me-2">{name}</div>
-          <div className="d-flex align-items-baseline">
-            {currencyFormat.format(amount)}
-            {max && (
-              <span className="text-muted fs-6 ms-1">
-                / {currencyFormat.format(max)}
-              </span>
-            )}
-          </div>
-        </Card.Title>
-        {max && (
-          <ProgressBar
-            className="rounded-pill"
-            variant={getProgressBarVariant(amount, max)}
-            min={0}
-            max={max}
-            now={amount}
-          />
-        )}
-        {!hideButtons && (
-          <Stack direction="horizontal" gap="2" className="mt-4">
-            <Button
-              variant="outline-primary"
-              className="ms-auto"
-              onClick={onAddExpenseClick}
-            >
-              Add Expense
-            </Button>
-            <Button onClick={ setShowExpenseView  } variant="outline-primary"
-              className="ms-auto">
-              View Expenses
-            </Button>
-          </Stack>
-        )}
-      </Card.Body>
-    </Card>
+      <Card className={classNames.join(" ")}>
+        <Card.Body>
+          <Card.Title className="d-flex justify-content-between align-items-baseline fw-normal mb-3">
+            <div className="me-2">{name}</div>
+            <div className="d-flex align-items-baseline">
+              {currencyFormat.format(amount)}
+              {max && (
+                <span className="text-muted fs-6 ms-1">
+                  / {currencyFormat.format(max)}
+                </span>
+              )}
+            </div>
+          </Card.Title>
+          {max && (
+            <ProgressBar
+              className="rounded-pill"
+              variant={getProgressBarVariant(amount, max)}
+              min={0}
+              max={max}
+              now={amount}
+            />
+          )}
+          {!hideButtons && (
+            <Stack direction="horizontal" gap="2" className="mt-4">
+              <Button
+                variant="outline-primary"
+                className="ms-auto"
+                onClick={onAddExpenseClick}
+              >
+                Add Expense
+              </Button>
+              <Button onClick={setShowExpenseView} variant="outline-primary"
+                className="ms-auto">
+                View Expenses
+              </Button>
+            </Stack>
+          )}
+        </Card.Body>
+      </Card>
 
 
-    <ViewExpensesModal
+      <ViewExpensesModal
 
 
-    showModal = { ShowExpenseView }
-   budget = {name}
-  listOfExpense= {listOfExpense}
-  handleClose = { handleCloseExpenseView}
-    
-    />
+        showModal={ShowExpenseView}
+        budget={name}
+        listOfExpense={listOfExpense}
+        handleClose={handleCloseExpenseView}
+
+      />
 
 
 

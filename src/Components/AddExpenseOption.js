@@ -13,7 +13,7 @@ export function AddExpenseOption({ showModal, setShowModal, defaultBudgetId, use
   };
 
   const handleUpload = () => {
-    setShowModal(false );
+    setShowModal(false);
     setShowReceiptUploader(true);
     setManualEntry(false);
   };

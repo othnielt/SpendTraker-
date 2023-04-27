@@ -4,7 +4,7 @@ import 'firebase/compat/auth';
 import { getFirestore } from "firebase/firestore";
 
 
- 
+
 
 const app = firebase.initializeApp({
   apiKey: "AIzaSyDl6KGyq_WBEsMO0mwfrTe8-Go1ILekLOM",

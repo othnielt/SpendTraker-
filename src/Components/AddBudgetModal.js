@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
-import { AddBudgetByUpload,AddBudget  } from "../Repository/Database";
+import { AddBudget } from "../Repository/Database";
 import { BudgetUploader } from '../Repository/VeryfiApi/BudgetUploader';
 
 export function AddBudgetModal({ show, handleClose, currentUser }) {
@@ -13,27 +13,27 @@ export function AddBudgetModal({ show, handleClose, currentUser }) {
     const name = nameRef.current.value;
     const max = parseFloat(maxRef.current.value);
 
-   if (!image ){
-   
-    
-    await AddBudget(currentUser,name,max)
+    if (!image) {
+
+
+      await AddBudget(currentUser, name, max)
+      handleClose()
+
+    }
+
+    await BudgetUploader(currentUser, image, max)
     handleClose()
-   
-   }
 
-   await BudgetUploader(currentUser, image,max)
-   handleClose()
 
-  
-    
+
   }
 
   function handleImageChange(e) {
-    
+
     setImage(e.target.files[0]);
   }
 
-  
+
 
   return (
     <Modal show={show} onHide={handleClose}>
@@ -44,7 +44,7 @@ export function AddBudgetModal({ show, handleClose, currentUser }) {
         <Modal.Body>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
-            <Form.Control ref={nameRef} type="text"/>
+            <Form.Control ref={nameRef} type="text" />
           </Form.Group>
           <Form.Group className="mb-3" controlId="max">
             <Form.Label>Maximum Spending</Form.Label>

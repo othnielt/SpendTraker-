@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { ProcessReceipt } from './ReceiptApi';
 import { AddReceiptExpense } from '../../Repository/Database';
@@ -17,7 +17,7 @@ export const ReceiptUploader = ({ currentUser, budgetID, onClose }) => {
       const apiKey = 'b77770908d10ee50ede5743da685a46d';
 
       const response = await ProcessReceipt(imageBase64, clientId, clientSecret, username, apiKey);
-  
+
       console.log("Response:", response);
 
       await AddReceiptExpense(currentUser, budgetID, response.line_items);

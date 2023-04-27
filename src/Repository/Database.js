@@ -1,60 +1,69 @@
-
-import React, {useContext} from "react";
 import { db } from "../firebase";
-import { collection, addDoc, getDocs, setDoc, getDoc,doc,query, where,updateDoc,arrayUnion,arrayRemove } from "firebase/firestore";
+import { collection, addDoc, getDocs, getDoc, doc, query, where, updateDoc, arrayUnion } from "firebase/firestore";
 
 
 
 
 
-const usersCollectionRef = collection(db, 'users');
-const budgetCollectionRef = collection(db, 'budget');
-/*
 
-add Budget to the database 
+/**
+ * Adds a new budget document for the current user to Firebase's Firestore database.
+ *
+ * @param {Object} currentUser - The Firebase `User` object representing the current user.
+ * @param {string} name - The name of the new budget document.
+ * @param {number} max - The maximum value for the new budget document.
+ * @returns {Promise<void>} A Promise that resolves with void upon successful addition of the budget document.
+ */
 
-*/
-
-
-export async function AddBudget (currentUser,name, max) {
+export async function AddBudget(currentUser, name, max) {
 
 
 
 
-try {
+  try {
 
     const docRef = doc(db, 'users', currentUser.uid);
     const colRef = collection(docRef, "budget")
-  
-   await  addDoc(colRef,{
+
+    await addDoc(colRef, {
       name: name,
       maximum: max
     });
- 
-} catch(e){
+
+  } catch (e) {
 
 
-  
 
+
+
+  }
 
 }
 
-}
 
-export async function AddBudgetByUpload(currentUser,  amount,receiptData) {
+/**
+ * Adds a new budget document to Firebase's Firestore database based on uploaded receipt data.
+ *
+ * @param {Object} currentUser - The Firebase `User` object representing the current user.
+ * @param {number} amount - The amount for the new budget document.
+ * @param {Object} receiptData - The receipt data to extract the category from.
+ * @returns {Promise<void>} A Promise that resolves with void upon successful addition of the budget document.
+ */
+
+export async function AddBudgetByUpload(currentUser, amount, receiptData) {
   try {
     const docRef = doc(db, 'users', currentUser.uid);
     const colRef = collection(docRef, "budget");
     console.log("totoooo",)
 
-    
+
 
     // Extract category from receipt data
     const category = receiptData.category;
-    console.log("soldat",receiptData);
-    console.log("totoooo",category);
-    console.log("rr",currentUser.uid);
-    console.log("amamo",amount);
+    console.log("soldat", receiptData);
+    console.log("totoooo", category);
+    console.log("rr", currentUser.uid);
+    console.log("amamo", amount);
 
     // Query for budget with matching category
     const querySnapshot = await getDocs(query(colRef, where("category", "==", category)));
@@ -76,19 +85,25 @@ export async function AddBudgetByUpload(currentUser,  amount,receiptData) {
     }
 
     // Create expense data object
-   
+
 
     // Add expense to budget
     await AddReceiptExpense(currentUser, budgetID, receiptData.line_items);
-  } catch(e) {
+  } catch (e) {
     console.error(e);
   }
 }
 
 
 
- //  Get userBudget from firebase 
- export async function FetchBudgets(currentUser) {
+/**
+ * Fetches all budget documents for the current user from Firebase's Firestore database.
+ *
+ * @param {Object} currentUser - The Firebase `User` object representing the current user.
+ * @returns {Promise<Array>} A Promise that resolves with an array of budget objects upon successful fetch.
+ */
+
+export async function FetchBudgets(currentUser) {
   try {
     const docRef = doc(db, 'users', currentUser.uid);
     const querySnapshot = await getDocs(collection(docRef, 'budget'));
@@ -96,7 +111,7 @@ export async function AddBudgetByUpload(currentUser,  amount,receiptData) {
     const budgetData = [];
     for (const doc of querySnapshot.docs) {
       const budget = { id: doc.id, ...doc.data() };
-      
+
       // Calculate total expenses for each budget
       let totalExpense = 0;
       if (budget.expense) {
@@ -108,7 +123,7 @@ export async function AddBudgetByUpload(currentUser,  amount,receiptData) {
 
       budgetData.push(budget);
     }
-   // console.log('fetching budgets:', budgetData);
+    // console.log('fetching budgets:', budgetData);
 
 
     return budgetData;
@@ -123,8 +138,17 @@ export async function AddBudgetByUpload(currentUser,  amount,receiptData) {
 
 
 
- //   AddExpense from firebase 
- export async function AddExpense(currentUser, budgetID, description, amount) {
+/**
+ * Adds an expense to a budget document in Firebase's Firestore database.
+ *
+ * @param {Object} currentUser - The Firebase `User` object representing the current user.
+ * @param {string} budgetID - The ID of the budget document to add the expense to.
+ * @param {string} description - The description of the new expense.
+ * @param {number} amount - The amount of the new expense.
+ * @returns {Promise<void>} A Promise that resolves with void upon successful addition of the expense.
+ */
+
+export async function AddExpense(currentUser, budgetID, description, amount) {
   console.log(currentUser.uid);
   console.log("budgetid: ", budgetID);
 
@@ -132,19 +156,21 @@ export async function AddBudgetByUpload(currentUser,  amount,receiptData) {
     const docRef = doc(db, "users", currentUser.uid, "budget", budgetID);
 
     await updateDoc(docRef, {
-  expense: arrayUnion({
-    budgetId: budgetID,
-    description: description,
-    amount: amount
-  })
-});
+      expense: arrayUnion({
+        budgetId: budgetID,
+        description: description,
+        amount: amount
+      })
+    });
 
   } catch (e) {
     console.log("Error adding expense:", e);
   }
 }
+
+
 /**
- * Adds an expense to the specified budget for the current user.
+ * Add an expense extracted from the Veryfi API to the specified budget for the current user
  * @param {Object} currentUser - The currently logged in user.
  * @param {string} budgetID - The ID of the budget to add the expense.
  * @param {Object} expenseData - An object containing the expense data to add, including type and total.
@@ -154,15 +180,15 @@ export async function AddReceiptExpense(currentUser, budgetID, expenseData) {
 
 
 
-    console.log("bbbbudgid: ", budgetID );
-    console.log("uuserid: ", currentUser.uid);
+  console.log("bbbbudgid: ", budgetID);
+  console.log("uuserid: ", currentUser.uid);
 
   try {
     const docRef = doc(db, "users", currentUser.uid, "budget", budgetID);
 
     for (const item of expenseData) {
       const { description, total } = item;
-      
+
       await updateDoc(docRef, {
         expense: arrayUnion({
           budgetId: budgetID,
@@ -182,39 +208,50 @@ export async function AddReceiptExpense(currentUser, budgetID, expenseData) {
 
 
 
-    //  Fetch  User Expensive from firebase 
-export  async  function FetchExpensive (currentUser) {
+/**
+ * Fetches all budget documents for the current user from Firebase's Firestore database that contain expenses.
+ *
+ * @param {Object} currentUser - The Firebase `User` object representing the current user.
+ * @returns {Promise<QuerySnapshot>} A Promise that resolves with a `QuerySnapshot` object upon successful fetch.
+ */
+
+export async function FetchExpensive(currentUser) {
 
   try {
-      const docRef = doc(db, 'users', currentUser.uid);
-const querySnapshot = await getDocs(collection(docRef, 'budget'));
+    const docRef = doc(db, 'users', currentUser.uid);
+    const querySnapshot = await getDocs(collection(docRef, 'budget'));
 
 
 
-return querySnapshot; 
-   
-  } catch(e){
+    return querySnapshot;
 
-   
-  
+  } catch (e) {
+
+
+
   }
 
-  }
+}
 
 
-  // remove Expense
-// Remove an expense map element at a specific index
-
+/**
+* Removes an expense from a budget document in Firebase's Firestore database.
+*
+* @param {Object} currentUser - The Firebase `User` object representing the current user.
+* @param {string} budgetId - The ID of the budget document to remove the expense from.
+* @param {number} index - The index of the expense to remove within the `expense` array.
+* @returns {Promise<void>} A Promise that resolves with void upon successful removal of the expense.
+*/
 
 export async function RemoveExpense(currentUser, budgetId, index) {
   const arrayName = 'expense';
 
   console.log(currentUser.uid, budgetId, index);
 
-  const budgetDocRef = doc(db,'users', currentUser.uid,'budget', budgetId);
+  const budgetDocRef = doc(db, 'users', currentUser.uid, 'budget', budgetId);
 
   const querySnapshot = await getDoc(budgetDocRef);
-  const getExpenseArray = querySnapshot.data()[arrayName]; 
+  const getExpenseArray = querySnapshot.data()[arrayName];
 
   await updateDoc(budgetDocRef, {
     [arrayName]: getExpenseArray.filter((_, i) => i !== index)
@@ -224,8 +261,14 @@ export async function RemoveExpense(currentUser, budgetId, index) {
 }
 
 
-//
 
+/**
+ * Fetches a budget document by its ID for the current user from Firebase's Firestore database.
+ *
+ * @param {Object} currentUser - The Firebase `User` object representing the current user.
+ * @param {string} budgetID - The ID of the budget document to fetch.
+ * @returns {Promise<Object|null>} A Promise that resolves with the fetched budget object upon successful fetch, or null if no budget is found with the specified ID.
+ */
 
 export async function GetBudgetById(currentUser, budgetID) {
 
@@ -234,7 +277,7 @@ export async function GetBudgetById(currentUser, budgetID) {
   try {
     const docRef = doc(db, 'users', currentUser.uid, 'budget', budgetID.toString());
     const docSnapshot = await getDoc(docRef);
-   console.log(docSnapshot );
+    console.log(docSnapshot);
     if (docSnapshot.exists()) {
       const budget = { id: docSnapshot.id, ...docSnapshot.data() };
 
@@ -247,7 +290,7 @@ export async function GetBudgetById(currentUser, budgetID) {
       }
       budget.amount = totalExpense;
 
-      console.log("the total bugdet",budget)
+      console.log("the total bugdet", budget)
       return budget;
     } else {
       console.log('No budget found with the specified ID');
@@ -342,7 +385,7 @@ export async function FetchTotalAmountSpent(currentUser) {
 
 
 
- 
+
 
 
 

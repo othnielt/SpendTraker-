@@ -2,7 +2,7 @@
 import React, { useContext, useState, useEffect } from "react"
 import { auth } from "../firebase";
 import { db } from "../firebase";
-import { collection, addDoc, getDocs, setDoc, doc } from "firebase/firestore";
+import { collection,setDoc, doc } from "firebase/firestore";
 
 
 
@@ -21,7 +21,14 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState();
   const [loading, setLoading] = useState(true)
 
-// Function to register a new user with email and password
+/**
+ * Registers a new user account using the provided email and password.
+ * 
+ * @param {string} email - The email address of the user to be registered.
+ * @param {string} password - The password to be used for the user account.
+ * @returns {Promise} A Promise that resolves with a userCredential object upon successful account creation.
+ */
+
   function RegisterUser(email, password) {
 
     console.log(email)
@@ -42,7 +49,16 @@ export function AuthProvider({ children }) {
 
 
   }
- // Function to log in an existing user with email and password
+
+
+/**
+ * Logs in an existing user with the provided email and password.
+ * 
+ * @param {string} email - The email address of the user to be logged in.
+ * @param {string} password - The password for the user account.
+ * @returns {Promise} A Promise that resolves with a userCredential object upon successful login.
+ */
+
   function LogInWithEMailPassword(email, password) {
 
     console.log(email)
@@ -54,12 +70,25 @@ export function AuthProvider({ children }) {
 
   }
 
-  // Function to update the current user's email
+  
+  /**
+ * Updates the email address of the currently authenticated user.
+ * 
+ * @param {string} email - The new email address for the user.
+ * @returns {Promise<void>} A Promise that resolves with void upon successful email update.
+ */
+
   function updateEmail(email) {
     return currentUser.updateEmail(email)
   }
 
-  // log out the current user
+  /**
+ * Logs out the currently authenticated user.
+ * 
+ * @returns {Promise<void>} A Promise that resolves with void upon successful user logout.
+ */
+
+
   function LogOut() {
 
     return auth.signOut();
@@ -90,7 +119,6 @@ export function AuthProvider({ children }) {
 
   }
 // Render the child components with the context value
-
 
   return (
 

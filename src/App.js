@@ -10,21 +10,21 @@ import { AuthProvider } from "./Provider/AuthContext"
 
 function App() {
   return (
-    <AuthProvider> 
-    <BrowserRouter>
-      <Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
 
-       
-      <Route path="/" element={<Signup/>} />
+
+          <Route path="/" element={<Signup />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login/>} />
-          <Route path="/budgetCard" element={<BudgetCard/>} />
-          <Route path="/RenderingCard" element={< RenderingCard/>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/budgetCard" element={<BudgetCard />} />
+          <Route path="/RenderingCard" element={< RenderingCard />} />
 
-         
-             
-      </Routes>
-    </BrowserRouter>;
+
+
+        </Routes>
+      </BrowserRouter>;
 
     </AuthProvider>
   )
